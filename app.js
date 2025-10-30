@@ -1,6 +1,9 @@
 // importo il framework express
 const express = require("express");
 
+// Importo il file di connessione al database
+const connection = require('./data/db');
+
 // creo una istanza di express
 const app = express();
 
@@ -28,8 +31,19 @@ app.use(express.static('public'));
 
 // imposto la rotta di home
 app.get("/", (req, res) => {
-    res.send('<h1> Server del mio blog di film </h1>')
+    console.log("Funzione index");
+
+    // preparo la query
+    const sql = 'SELECT * FROM movies';
+
+    // eseguo la query
+    connection.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query failed' });
+        res.json(results);
+    });
+    // res.send('<h1> Server del mio blog di film </h1>')
 })
+
 
 // richiamo middleware gestione errore per rotta non esistente
 // deve essere richiamato dopo le rotte
