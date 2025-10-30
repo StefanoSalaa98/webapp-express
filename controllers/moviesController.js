@@ -14,7 +14,6 @@ function index(req, res) {
 }
 
 function show(req, res) {
-    console.log("show!!!!!")
 
     // recupero l'id dall' URL della richiesta
     const id = req.params.id;
