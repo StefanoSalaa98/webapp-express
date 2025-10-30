@@ -11,11 +11,11 @@ const port = 3000;
 // permette di leggere in formato json i dati inviati nella request
 app.use(express.json());
 
-// // importo globalmente il middleware che gestisce errore per rotta inesistente
-// const notFound = require("./middlewares/notFound.js");
+// importo globalmente il middleware che gestisce errore per rotta inesistente
+const notFound = require("./middlewares/notFound.js");
 
-// // importo globalmente il middleware che gestisce l'errore del server
-// const errorServer = require("./middlewares/errorServer");
+// importo globalmente il middleware che gestisce l'errore del server
+const errorServer = require("./middlewares/errorServer");
 
 // importo il modulo del router per i movies
 // const postRouter = require("./routers/RouterPosts.js")
@@ -33,10 +33,10 @@ app.get("/", (req, res) => {
 
 // richiamo middleware gestione errore per rotta non esistente
 // deve essere richiamato dopo le rotte
-// app.use(notFound);
+app.use(notFound);
 
 // richiamo middleware gestione errori del server
-// app.use(errorServer);
+app.use(errorServer);
 
 // metto in ascolto il server sulla porta definita
 app.listen(port, () => {
