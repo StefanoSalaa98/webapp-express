@@ -4,13 +4,14 @@ const express = require("express");
 // attivo il router
 const router = express.Router();
 
-
+// importo il controller della risorsa posts
+const moviesController = require('../controllers/moviesController');
 
 // Rotta /index che restituisca un oggetto json con la lista dei post filtrati o non.
-router.get('/', function () { console.log("index") });
+router.get('/', moviesController.index);
 
 // Rotta /show/:id che restituisca un singolo post
-router.get('/:id', function () { console.log("show") });
+router.get('/:id', moviesController.show);
 
 
 
