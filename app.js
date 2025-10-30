@@ -21,16 +21,16 @@ const notFound = require("./middlewares/notFound.js");
 const errorServer = require("./middlewares/errorServer");
 
 // importo il modulo del router per i movies
-// const postRouter = require("./routers/RouterPosts.js")
+const moviesRouter = require("./routers/moviesRouter.js")
 
 // uso il middleware static di express per rendere disponibile i file statici
 app.use(express.static('public'));
 
 // rotte per i movies
-// app.use("/movies", movieRouter);
+app.use("/api/movies", moviesRouter);
 
 // imposto la rotta di home
-app.get("/", (req, res) => {
+app.get("/api/", (req, res) => {
 
     res.send('<h1> Server del mio blog di film </h1>')
 })
