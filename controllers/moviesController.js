@@ -31,8 +31,11 @@ function show(req, res) {
     connection.query(movieSql, [id], (err, results) => {
         if (results.length === 0) return res.status(404).json({ error: 'Movie not found' });
 
-        // Recupero il post
+        // Recupero il singolo post
         const movie = results[0];
+
+        //
+        movie.image = req.imagePath + movie.image;
 
         // Se la prima query ha avuto successo, eseguo la seconda query per i tags
         connection.query(tagsSql, [id], (err, results) => {

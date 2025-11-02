@@ -23,8 +23,14 @@ const errorServer = require("./middlewares/errorServer");
 // importo il modulo del router per i movies
 const moviesRouter = require("./routers/moviesRouter.js")
 
+// importo globalmente il middleware per la gestione dei path delle immagini
+const imagePath = require("./middlewares/imagePath");
+
 // uso il middleware static di express per rendere disponibile i file statici
 app.use(express.static('public'));
+
+// registro il middleware per la gestione dei path delle immagini
+app.use(imagePath);
 
 // rotte per i movies
 app.use("/api/movies", moviesRouter);
@@ -34,20 +40,6 @@ app.get("/api/", (req, res) => {
 
     res.send('<h1> Server del mio blog di film </h1>')
 })
-
-app.get("/movies", (req, res) => {
-    console.log("Funzione index");
-
-    // preparo la query
-    const sql = 'SELECT * FROM movies';
-
-    // eseguo la query
-    connection.query(sql, (err, results) => {
-        if (err) return res.status(500).json({ error: 'Database query failed' });
-        res.json(results);
-    });
-})
-
 
 // richiamo middleware gestione errore per rotta non esistente
 // deve essere richiamato dopo le rotte
