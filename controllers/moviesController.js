@@ -30,14 +30,17 @@ function show(req, res) {
     ON R.movie_id = M.id 
     WHERE M.id = ?`
 
-    // seconda query per i tag associati al film
-    const tagsSql = `
+    // seconda query per le recensioni associate al film
+    const reviewSql = `
     SELECT R.vote, R.text
     FROM movies AS M
     JOIN reviews AS R ON R.movie_id = M.id
     WHERE M.id = ? `;
 
     connection.query(movieSql, [id], (err, results) => {
+        // gestisco errore server mysql
+        if (err) return res.status(500).json({ error: "Database error" })
+        // gestisco anche errore 404
         if (results.length === 0) return res.status(404).json({ error: 'Movie not found' });
 
         // Recupero il singolo post
@@ -46,8 +49,9 @@ function show(req, res) {
         // aggiungo il path fornito dal middleware per le immagini all'immagine del film
         movie.image = req.imagePath + movie.image;
 
-        // Se la prima query ha avuto successo, eseguo la seconda query per i tags
-        connection.query(tagsSql, [id], (err, results) => {
+        // Se la prima query ha avuto successo, eseguo la seconda query per le recensionu
+        connection.query(reviewSql, [id], (err, results) => {
+            // gestiscoo errore server mysql
             if (err) return res.status(500).json({ error: 'Database query failed' });
 
             // Aggiungo le recensioni al film
