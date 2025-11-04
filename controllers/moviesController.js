@@ -9,6 +9,9 @@ function index(req, res) {
     // eseguo la query
     connection.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: 'Database query failed' });
+        results.map(movie => {
+            movie.image = req.imagePath + movie.image;
+        })
         res.json(results);
     });
 }
@@ -18,10 +21,10 @@ function show(req, res) {
     // recupero l'id dall' URL della richiesta
     const id = req.params.id;
 
-    // prima query di ricerca della post singola
+    // prima query di ricerca del singolo film
     const movieSql = 'SELECT * FROM movies WHERE id = ?';
 
-    // seconda query per i tag associati al post
+    // seconda query per i tag associati al film
     const tagsSql = `
     SELECT R.vote, R.text
     FROM movies AS M
@@ -34,7 +37,7 @@ function show(req, res) {
         // Recupero il singolo post
         const movie = results[0];
 
-        //
+        // aggiungo il path fornito dal middleware per le immagini all'immagine del film
         movie.image = req.imagePath + movie.image;
 
         // Se la prima query ha avuto successo, eseguo la seconda query per i tags
