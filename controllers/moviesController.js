@@ -22,7 +22,13 @@ function show(req, res) {
     const id = req.params.id;
 
     // prima query di ricerca del singolo film
-    const movieSql = 'SELECT * FROM movies WHERE id = ?';
+    // utilizzo una LEFT JOIN per poter avere tutti i film, anche quelli che non hanno nessuna recensione
+    const movieSql = `
+    SELECT M.*, ROUND(AVG(R.vote),1) AS average_vote
+    FROM movies M 
+    LEFT JOIN reviews R 
+    ON R.movie_id = M.id 
+    WHERE M.id = ?`
 
     // seconda query per i tag associati al film
     const tagsSql = `
