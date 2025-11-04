@@ -26,6 +26,14 @@ const moviesRouter = require("./routers/moviesRouter.js")
 // importo globalmente il middleware per la gestione dei path delle immagini
 const imagePath = require("./middlewares/imagePath");
 
+// importo il middleware CORS
+const cors = require("cors");
+
+// middleware per il CORS
+app.use(cors({
+    origin: process.env.FE_APP
+}));
+
 // uso il middleware static di express per rendere disponibile i file statici
 app.use(express.static('public'));
 
