@@ -23,35 +23,37 @@ function show(req, res) {
 
     // prima query di ricerca del singolo film
     // utilizzo una LEFT JOIN per poter avere tutti i film, anche quelli che non hanno nessuna recensione
-    const movieSql = `
-    SELECT M.*, ROUND(AVG(R.vote),1) AS average_vote
+    const movieSql = ` 
+    SELECT M.* , ROUND(AVG(R.vote),1) AS average_vote
     FROM movies M 
     LEFT JOIN reviews R 
     ON R.movie_id = M.id 
-    WHERE M.id = ?`
+    WHERE M.id = ?
+    GROUP BY M.id`;
 
     // seconda query per le recensioni associate al film
     const reviewSql = `
-    SELECT R.vote, R.text
+    SELECT R.*
     FROM movies AS M
     JOIN reviews AS R ON R.movie_id = M.id
     WHERE M.id = ? `;
 
-    connection.query(movieSql, [id], (err, results) => {
+    connection.query(movieSql, [id], (err, movieResults) => {
         // gestisco errore server mysql
         if (err) return res.status(500).json({ error: "Database error" })
         // gestisco anche errore 404
-        if (results.length === 0) return res.status(404).json({ error: 'Movie not found' });
+        if (movieResults.length === 0) return res.status(404).json({ error: 'Movie not found' });
+        console.log(err);
 
-        // Recupero il singolo post
-        const movie = results[0];
+        // Recupero il singolo film
+        const movie = movieResults[0];
 
         // aggiungo il path fornito dal middleware per le immagini all'immagine del film
         movie.image = req.imagePath + movie.image;
 
-        // Se la prima query ha avuto successo, eseguo la seconda query per le recensionu
+        // Se la prima query ha avuto successo, eseguo la seconda query per le recensioni
         connection.query(reviewSql, [id], (err, results) => {
-            // gestiscoo errore server mysql
+            // gestisco errore server mysql
             if (err) return res.status(500).json({ error: 'Database query failed' });
 
             // Aggiungo le recensioni al film

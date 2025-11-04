@@ -49,12 +49,12 @@ app.get("/api/", (req, res) => {
     res.send('<h1> Server del mio blog di film </h1>')
 })
 
+// richiamo middleware gestione errori del server
+app.use(errorServer);
+
 // richiamo middleware gestione errore per rotta non esistente
 // deve essere richiamato dopo le rotte
 app.use(notFound);
-
-// richiamo middleware gestione errori del server
-app.use(errorServer);
 
 // metto in ascolto il server sulla porta definita
 app.listen(port, () => {
