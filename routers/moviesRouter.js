@@ -13,6 +13,8 @@ router.get('/', moviesController.index);
 // Rotta /show/:id che restituisce un singolo film
 router.get('/:id', moviesController.show);
 
+// Rotta che permette di inserire una nuova recensione
+router.post('/:id/reviews', moviesController.storeReview);
 
 
 module.exports = router;

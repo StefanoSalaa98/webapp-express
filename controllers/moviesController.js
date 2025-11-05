@@ -1,6 +1,7 @@
 // Importo il file di connessione al database
 const connection = require('../data/db');
 
+// funzione che restituisce la lista dei film
 function index(req, res) {
 
     // preparo la query
@@ -16,6 +17,7 @@ function index(req, res) {
     });
 }
 
+// funzione che restituisce il film selezionato con le relative recensioni
 function show(req, res) {
 
     // recupero l'id dall' URL della richiesta
@@ -63,5 +65,30 @@ function show(req, res) {
     });
 }
 
+// funzione che permette di aggiungere nel database una nuova recensione
+function storeReview(req, res) {
+
+    // recupero il parametro dinamico id dalla richiesta grazie a params
+    const id = req.params.id;
+
+    // recupero i dati inviati dalla richiesta nel body
+    const { name, vote, text } = req.body;
+
+    // preparo la query per la chiamata al database
+    const sql = 'INSERT INTO `reviews` (`name`, `vote`, `text`, `movie_id`) VALUES (?,?,?,?)';
+
+    // eseguo la query (con check preventivo dei dati)
+    connection.query(sql, [name, vote, text, id], (err, result) => {
+        // se c'è un errore lato server DB
+        if (err) return res.status(500).json({ error: 'Database query failed' });
+        // se va tutto bene
+        res.status(201);
+        res.json({ id: result.insertId, message: 'Review added' });
+    })
+
+}
+
 // esporto le funzioni che ho creato
-module.exports = { index, show }
+module.exports = { index, show, storeReview }
+
+
